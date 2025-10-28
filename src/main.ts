@@ -6,14 +6,14 @@ const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
 renderer.setSize( window.innerWidth, window.innerHeight );
 
 // Create camera
-const fov = 75;
+const fov = 90;
 const aspect = window.innerWidth / window.innerHeight;  // the canvas default
 const near = 0.1;
-const far = 5;
+const far = 150;
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
 // Move the camera back so we can view the scene
-camera.position.z = 4;
+camera.position.z = 10;
 
 // Create scene
 const scene = new THREE.Scene();
@@ -21,19 +21,19 @@ const scene = new THREE.Scene();
 // Add light
 {
   const color = 0xFFFFFF;
-  const intensity = 5;
+  const intensity = 1.5; // reasonable intensity for MeshPhongMaterial
   const light = new THREE.DirectionalLight( color, intensity );
   light.position.set( - 1, 2, 4 );
   scene.add( light );
 }
 
-// Create box
-const boxWidth = 1;
-const boxHeight = 1;
-const boxDepth = 1;
-const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+// Create sphere
+const sphereRadius = 2.5;
+const widthSegments = 32;
+const heightSegments = 16;
+const geometry = new THREE.SphereGeometry(sphereRadius, widthSegments, heightSegments);
 
-function makeInstance(geometry: THREE.BoxGeometry, color: THREE.ColorRepresentation, x: number) {
+function makeInstance(geometry: THREE.SphereGeometry, color: THREE.ColorRepresentation, x: number) {
   const material = new THREE.MeshPhongMaterial({color});
  
   const cube = new THREE.Mesh(geometry, material);
@@ -45,9 +45,9 @@ function makeInstance(geometry: THREE.BoxGeometry, color: THREE.ColorRepresentat
 }
 
 const cubes = [
-  makeInstance(geometry, 0x44aa88,  0),
-  makeInstance(geometry, 0x8844aa, -2),
-  makeInstance(geometry, 0xaa8844,  2),
+  makeInstance(geometry, 0x44aa88, -6),
+  makeInstance(geometry, 0x8844aa, 0),
+  makeInstance(geometry, 0xaa8844, 6),
 ];
 
 // Animate the cube
@@ -62,7 +62,7 @@ function render(time: number) {
 
 		cubes.forEach( ( cube, ndx ) => {
 
-			const speed = 3 + ndx * .1;
+			const speed = 1 + ndx * .1;
 			const rot = time * speed;
 			cube.rotation.x = rot;
 			cube.rotation.y = rot;
